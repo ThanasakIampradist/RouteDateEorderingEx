@@ -40,12 +40,12 @@ public class JavaApplication61 {
     public static void main(String[] args) {
         try {
             // TODO code application logic here
-            Temp = DateSQlFmt.parse("2021-05-17");
+            Temp = DateSQlFmt.parse("2021-05-16");
         } catch (ParseException ex) {
             Logger.getLogger(JavaApplication61.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        String[] Dayset = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-        String[] Dayset = {"Mon", "Wed", "Fri"};
+        String[] Dayset = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+//        String[] Dayset = {"Mon", "Wed", "Fri"};
         ArrayList<String> list = getDataRound(3, "09:00", "XXXX", "D", "", "09:00", Dayset, "1");
         for (String obj : list) {
             System.out.println(obj);
@@ -62,8 +62,8 @@ public class JavaApplication61 {
         String _dateNow = "";
         String _dateRec = "";
         //
-//    String[] daynot = {"N"};
-        String[] daynot = {"Sun"};
+    String[] daynot = {"N"};
+//        String[] daynot = {"Sun"};
         _DayNotProcess = CheckDayNotProcess(daynot);
 //    String timecurr = TIME_SHOW.format(new Date());
 //    String datecurr = DATE_SHOW.format(new Date());
