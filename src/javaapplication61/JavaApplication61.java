@@ -29,6 +29,7 @@ public class JavaApplication61 {
     public static Calendar CALENDAR_NOW = Calendar.getInstance(Locale.ENGLISH);
     public static Calendar CALENDAR_REC = Calendar.getInstance(Locale.ENGLISH);
     public static Calendar CALENDAR_TMP = Calendar.getInstance(Locale.ENGLISH);
+    public static Calendar CALENDAR_TMP2 = Calendar.getInstance(Locale.ENGLISH);
     public static Calendar CALENDAR_CHK = Calendar.getInstance(Locale.ENGLISH);
     public static Calendar CALENDAR_ORD = Calendar.getInstance(Locale.ENGLISH);
     public static SimpleDateFormat DateSQlFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -39,11 +40,12 @@ public class JavaApplication61 {
     public static void main(String[] args) {
         try {
             // TODO code application logic here
-            Temp = DateSQlFmt.parse("2021-05-14");
+            Temp = DateSQlFmt.parse("2021-05-17");
         } catch (ParseException ex) {
             Logger.getLogger(JavaApplication61.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String[] Dayset = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+//        String[] Dayset = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        String[] Dayset = {"Mon", "Wed", "Fri"};
         ArrayList<String> list = getDataRound(3, "09:00", "XXXX", "D", "", "09:00", Dayset, "1");
         for (String obj : list) {
             System.out.println(obj);
@@ -52,7 +54,6 @@ public class JavaApplication61 {
 
     public static ArrayList<String> getDataRound(int leadtime, String timesend, String grouporder_id, String type, String Daylastmodify, String Timelastmodify, String[] Dayset, String Round) {
         ArrayList<String> data = new ArrayList<String>();
-
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 //            String[] daynot = {"N"};
         // Virable For Check DayNot Bakery
@@ -81,7 +82,7 @@ public class JavaApplication61 {
             car.add(Calendar.DAY_OF_MONTH, 1);
         }
         if (type.equals("D") || type.equals("S")) {
-            for (int i = 0; i < 45; i++) {
+            for (int i = 0; i < 5; i++) {
                 for (int b = 0; b < dayset.length; b++) {
                     String s1 = EE_FORMAT.format(car.getTime()).toLowerCase();
                     if (s1.equals(dayset[b].toLowerCase())) {
@@ -145,6 +146,7 @@ public class JavaApplication61 {
         CALENDAR_NOW.set(Integer.parseInt(now[2]), Integer.parseInt(now[1]) - 1, Integer.parseInt(now[0]));
         CALENDAR_REC.set(Integer.parseInt(rec[2]), Integer.parseInt(rec[1]) - 1, Integer.parseInt(rec[0]));
         CALENDAR_TMP.set(Integer.parseInt(now[2]), Integer.parseInt(now[1]) - 1, Integer.parseInt(now[0]));
+        CALENDAR_TMP2.set(Integer.parseInt(now[2]), Integer.parseInt(now[1]) - 1, Integer.parseInt(now[0]));
 
         eeNow = EE_FORMAT.format(CALENDAR_NOW.getTime());
         boolean isDaynot = false;
@@ -158,10 +160,24 @@ public class JavaApplication61 {
             if (timenow.compareTo(timesend) >= 0) {
                 CALENDAR_TMP.add(Calendar.DAY_OF_MONTH, +leadtime);
             } else {
+
                 CALENDAR_TMP.add(Calendar.DAY_OF_MONTH, +leadtime - 1);
+                CALENDAR_TMP2.add(Calendar.DAY_OF_MONTH, +leadtime - 2);
             }
         } else {
             CALENDAR_TMP.add(Calendar.DAY_OF_MONTH, +leadtime - 1);
+        }
+
+        String Day_NotProduce_1 = EE_FORMAT.format(CALENDAR_TMP2.getTime());
+        boolean DayAfter_NotProduce = false;
+        for (int j = 0; j < daynot.length; j++) {
+            if (Day_NotProduce_1.equals(daynot[j])) {
+                DayAfter_NotProduce = true;
+                break;
+            }
+        }
+        if (DayAfter_NotProduce) {
+            CALENDAR_TMP.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         eeTmp = EE_FORMAT.format(CALENDAR_TMP.getTime());
@@ -176,11 +192,11 @@ public class JavaApplication61 {
 //                    if (!eeTmp.equals(daynot[j])) {
                     if (eeTmp.equals(daynot[j])) {
                         CALENDAR_TMP.add(Calendar.DAY_OF_MONTH, +1);
+//                        System.out.println("CALENDAR_TMP : " + DateSQlFmt.format(CALENDAR_TMP.getTime()));
                     }
                 }
             }
         }
-
         //Check Day Last Modify
         if (!daylastmodify.equals("")) {
             //อยู่ในรอบ
@@ -247,10 +263,13 @@ public class JavaApplication61 {
             }
 
         } else //check datetime to edit order
-        if (CALENDAR_REC.getTime().compareTo(CALENDAR_TMP.getTime()) > 0) {  //befor Chang >=
-            isEdit = true;
+        {
+//            System.out.println("CALENDAR_REC : " + DateSQlFmt.format(CALENDAR_REC.getTime()));
+//            System.out.println("CALENDAR_TMP : " + DateSQlFmt.format(CALENDAR_TMP.getTime()));
+            if (CALENDAR_REC.getTime().compareTo(CALENDAR_TMP.getTime()) > 0) {  //befor Chang >=
+                isEdit = true;
+            }
         }
-
         return isEdit;
     }
 
